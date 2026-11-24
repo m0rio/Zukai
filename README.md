@@ -78,7 +78,7 @@ node scripts/render.mjs examples/sequence.html out.png
 | 差し色（斜線） | 水色 `#8fb4ec` |
 | 見出しのマーカー | 薄い黄色 `#f6e7a0` |
 
-書体は Yusei Magic。値の正本は [`SKILL.md`](SKILL.md) 4章と `zukai.js`。Design System「Morio Navy」はその写しで、見本はこのリポジトリの `examples/*.js` を読み込んで表示する。
+書体は Yusei Magic。値の正本は [`SKILL.md`](SKILL.md) 4章と `zukai.js`。Design System「Morio Navy」はその写しで、`zukai.js` と `examples/*.js` をそのまま写して見本を表示する。
 
 ## 部品や型を足す・直すとき
 
