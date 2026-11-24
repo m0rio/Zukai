@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yusei+Magic&display=swap">
+<style>html,body{margin:0;background:#eeeeee}svg{display:block}</style>
+</head>
+<body>
+<svg id="s" xmlns="http://www.w3.org/2000/svg" width="1200" height="400" role="img"
+  aria-label="不正検知の位置の比較図。いままでは振込API、勘定系、不正検知の順で、不正に気づくのはお金が動いた後。これからは振込API、不正検知、勘定系の順で、不正ならお金は動かない。"></svg>
+<script src="https://cdn.jsdelivr.net/npm/roughjs@4.6.6/bundled/rough.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/m0rio/Zukai@main/zukai.js"></script>
+<script>
+const z = Zukai.create(document.getElementById('s'), { width: 1200, height: 400 }), C = z.C;
+z.heading(60, 56, '検知を、記帳の後から前へ動かす');
+const Y = 222;
+
+// いままで
+z.T(80, 132, 'いままで', { size: 21 });
+z.arrow([[216, Y], [256, Y]]); z.arrow([[384, Y], [424, Y]]);
+z.box(80, Y - 32, 130, 64, '振込API');
+z.cylinder(262, Y - 42, 116, 84, '勘定系');
+z.box(430, Y - 32, 130, 64, '不正検知');
+z.T(320, 326, '気づくのは、お金が動いた後', { size: 19, anchor: 'middle' });
+
+// 変化
+z.arrow([[586, Y], [652, Y]], { strokeWidth: 4.5, head: 17 });
+
+// これから（同じ部品を、順番だけ変えて並べる）
+z.T(680, 132, 'これから', { size: 21 });
+z.arrow([[816, Y], [856, Y]]); z.arrow([[998, Y], [1038, Y]]);
+z.box(680, Y - 32, 130, 64, '振込API');
+z.box(862, Y - 32, 130, 64, '不正検知', { role: 'main' });
+z.cylinder(1044, Y - 42, 116, 84, '勘定系');
+z.T(920, 326, '不正なら、お金は動かない', { size: 19, anchor: 'middle' });
+</script>
+</body>
+</html>

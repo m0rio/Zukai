@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yusei+Magic&display=swap">
+<style>html,body{margin:0;background:#eeeeee}svg{display:block}</style>
+</head>
+<body>
+<svg id="s" xmlns="http://www.w3.org/2000/svg" width="1200" height="580" role="img"
+  aria-label="振込アプリの層の図。上から画面、ユースケース、ドメイン、インフラの4層。限度額、手数料、検知ルールはドメインの層にある。"></svg>
+<script src="https://cdn.jsdelivr.net/npm/roughjs@4.6.6/bundled/rough.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/m0rio/Zukai@main/zukai.js"></script>
+<script>
+const z = Zukai.create(document.getElementById('s'), { width: 1200, height: 580 }), C = z.C;
+z.heading(60, 56, '振込のルールは、ドメインの層だけに置く');
+
+// 骨組み：上から下へ積んだ層
+const [ui, uc, dm, inf] = z.layers(220, 110, 760, 96, ['画面', 'ユースケース', 'ドメイン', 'インフラ'], { main: 2 });
+const b = (l, i, t) => z.box(l.x + i * 172, l.cy - 27, 148, 54, t);
+
+// 中身：層の中に置く
+b(ui, 0, '入力'); b(ui, 1, '確認'); b(ui, 2, '完了');
+b(uc, 0, '振込する');
+b(dm, 0, '限度額'); b(dm, 1, '手数料'); b(dm, 2, '検知ルール');
+b(inf, 0, 'API通信'); z.cylinder(inf.x + 172, inf.cy - 34, 148, 68, '履歴');
+</script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yusei+Magic&display=swap">
+<style>html,body{margin:0;background:#eeeeee}svg{display:block}</style>
+</head>
+<body>
+<svg id="s" xmlns="http://www.w3.org/2000/svg" width="1200" height="480" role="img"
+  aria-label="振込機能のツリー図。振込は入力、確認、実行、通知に分かれる。入力は宛先と金額、実行は不正検知と出金・入金に分かれる。"></svg>
+<script src="https://cdn.jsdelivr.net/npm/roughjs@4.6.6/bundled/rough.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/m0rio/Zukai@main/zukai.js"></script>
+<script>
+const z = Zukai.create(document.getElementById('s'), { width: 1200, height: 480 }), C = z.C;
+z.heading(60, 56, '不正検知は「実行」の中にある');
+const b = (x, y, t, o) => { const w = (o && o.w) || 120; z.box(x - w / 2, y, w, 56, t, o); };
+
+// 骨組み：親の下辺から子の上辺へ枝を引く
+z.branch([600, 166], [[250, 240], [480, 240], [760, 240], [990, 240]]);
+z.branch([250, 296], [[180, 370], [320, 370]]);
+z.branch([760, 296], [[680, 370], [850, 370]]);
+
+// 中身
+b(600, 110, '振込', { w: 140 });
+b(250, 240, '入力'); b(480, 240, '確認'); b(760, 240, '実行'); b(990, 240, '通知');
+b(180, 370, '宛先'); b(320, 370, '金額');
+b(680, 370, '不正検知', { role: 'main', w: 130 }); b(850, 370, '出金・入金', { w: 140 });
+</script>
+</body>
+</html>

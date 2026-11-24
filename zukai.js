@@ -81,16 +81,26 @@
       return T(x, y + 1, s, { size, anchor: 'middle' });
     };
     // 矢印。pts は通過点（2点なら直線、3点以上は曲線）。頭は最後の2点の向き
-    const arrow = (pts, o) => {
-      o = Object.assign({ strokeWidth: 2.5 }, o);
-      const head = o.head || 13; delete o.head;
-      if (pts.length === 2) L(pts[0][0], pts[0][1], pts[1][0], pts[1][1], o);
-      else add(rc.curve(pts, base(o)));
+    const tip = (pts, head, o) => {
       const [ax, ay] = pts[pts.length - 2], [bx, by] = pts[pts.length - 1];
       const a = Math.atan2(by - ay, bx - ax);
       for (const d of [0.5, -0.5]) {
         L(bx, by, bx - head * Math.cos(a + d), by - head * Math.sin(a + d), Object.assign({}, o, { roughness: 0.8, strokeLineDash: undefined }));
       }
+    };
+    const arrow = (pts, o) => {
+      o = Object.assign({ strokeWidth: 2.5 }, o);
+      const head = o.head || 13; delete o.head;
+      if (pts.length === 2) L(pts[0][0], pts[0][1], pts[1][0], pts[1][1], o);
+      else add(rc.curve(pts, base(o)));
+      tip(pts, head, o);
+    };
+    // 折れ線の矢印。pts の点を直線でつなぐ（直角に曲げる経路に使う）
+    const elbow = (pts, o) => {
+      o = Object.assign({ strokeWidth: 2.5 }, o);
+      const head = o.head || 12; delete o.head;
+      PL(pts, o);
+      tip(pts, head, o);
     };
     const ground = (x1, x2, y, o) => L(x1, y, x2, y, Object.assign({ stroke: C.grey, strokeWidth: 2 }, o));
 
@@ -258,10 +268,149 @@
       if (label) T(x + w / 2, y + h / 2 + 6, label, { size: o.size || 18, anchor: 'middle', halo: true });
     };
 
+    // スマホ。x: 中心、b: 底
+    const phone = (x, b, o) => {
+      o = o || {}; const s = o.s || 1, w = 46 * s, h = 80 * s;
+      RH(x - w / 2, b - h, w, h, solid(C.raised));
+      R(x - w / 2 + 6 * s, b - h + 10 * s, w - 12 * s, h - 26 * s, { strokeWidth: 1.5, roughness: 0.7, fill: C.navySoft, fillStyle: 'solid' });
+      L(x - 7 * s, b - 8 * s, x + 7 * s, b - 8 * s, { strokeWidth: 2, roughness: 0.6 });
+    };
+    // 金庫。x: 中心、b: 底
+    const safe = (x, b, o) => {
+      o = o || {}; const s = o.s || 1, w = 104 * s, h = 96 * s, f = 8 * s, y = b - f - h;
+      L(x - w / 2 + 14 * s, b - f, x - w / 2 + 14 * s, b); L(x + w / 2 - 14 * s, b - f, x + w / 2 - 14 * s, b);
+      RH(x - w / 2, y, w, h, hach(C.grey, 5));
+      RH(x - w / 2 + 12 * s, y + 12 * s, w - 24 * s, h - 24 * s, solid(C.raised));
+      const cx = x + 6 * s, cy = y + h / 2, r = 15 * s;
+      for (const a of [0, Math.PI / 2, Math.PI / 4, -Math.PI / 4]) {
+        L(cx - (r + 6 * s) * Math.cos(a), cy - (r + 6 * s) * Math.sin(a), cx + (r + 6 * s) * Math.cos(a), cy + (r + 6 * s) * Math.sin(a), { strokeWidth: 2, roughness: 0.6 });
+      }
+      O(cx, cy, r * 2, Object.assign(solid(C.raised), { roughness: 0.8 }));
+      O(cx, cy, 6 * s, { strokeWidth: 1, roughness: 0.4, fill: C.navy, fillStyle: 'solid' });
+      for (const dy of [0.3, 0.7]) L(x - w / 2 + 12 * s, y + h * dy - 6 * s, x - w / 2 + 12 * s, y + h * dy + 6 * s, { strokeWidth: 5, roughness: 0.5 });
+    };
+
+    // 状態（だ円）。x, y: 中心、{ w, role: 'main' }
+    const state = (x, y, label, o) => {
+      o = o || {}; const size = o.size || 18, w = o.w || tw(label, size) + 64, h = o.h || 58, main = o.role === 'main';
+      add(rc.ellipse(x, y, w, h, under()));
+      add(rc.ellipse(x, y, w, h, base(solid(main ? C.navy : C.raised))));
+      T(x, y + 1, label, { size, anchor: 'middle', fill: main ? C.onNavy : C.navy });
+    };
+    // 始まりの点
+    const dot = (x, y) => O(x, y, 20, { roughness: 0.6, fill: C.navy, fillStyle: 'solid' });
+    // 分岐（ひし形）。x, y: 中心
+    const diamond = (x, y, w, h, label, o) => {
+      const p = [[x, y - h / 2], [x + w / 2, y], [x, y + h / 2], [x - w / 2, y]];
+      add(rc.polygon(p, under())); PG(p, solid(C.raised));
+      if (label) T(x, y + 1, label, { size: (o && o.size) || 17, anchor: 'middle' });
+    };
+
+    // ── 型の骨組み（型の決まりだけを描いて位置を返す。中身は部品で組む）──
+    // 等間隔に並べた列の中心
+    const cols = (x1, x2, n) => Array.from({ length: n }, (_, i) => x1 + ((x2 - x1) * i) / (n - 1));
+    // シーケンス図。xs: 列の中心、top: 線の始まり（数か、列ごとの配列）、bottom: 線の終わり
+    const sequence = (xs, top, bottom) => {
+      xs.forEach((x, i) => L(x, Array.isArray(top) ? top[i] : top, x, bottom, { stroke: C.grey, strokeWidth: 1.5, strokeLineDash: [7, 7], roughness: 0.5 }));
+      // やり取り。a → b は列の番号、y は高さ。{ back: 返事, main: 要の1本, async: 非同期 }
+      const msg = (a, b, y, label, o) => {
+        o = o || {}; const dir = Math.sign(b - a), gap = 8;
+        const st = o.back ? { stroke: C.grey, strokeWidth: 2, head: 10 } : o.main ? { strokeWidth: 4.5, head: 16 } : { head: 12 };
+        if (o.async) st.strokeLineDash = [9, 7];
+        arrow([[xs[a] + dir * gap, y], [xs[b] - dir * gap, y]], st);
+        if (!label) return;
+        const lx = (xs[a] + xs[a + dir]) / 2;
+        if (o.main) heading(lx, y - 22, label, { size: 18, anchor: 'middle' });
+        else T(lx, y - 17, label, { size: 17, anchor: 'middle' });
+      };
+      return { x: xs, msg };
+    };
+    // スイムレーン。x, y: 左上、w: 全幅、h: 1レーンの高さ、names: 上からの担当 → { y: レーンの中心, x: 中身の左端, r: 右端 }
+    const lanes = (x, y, w, h, names, o) => {
+      o = o || {}; const head = o.head || 130, n = names.length;
+      for (let i = 1; i < n; i++) L(x, y + i * h, x + w, y + i * h, { stroke: C.grey, strokeWidth: 1.5, roughness: 0.6 });
+      L(x + head, y, x + head, y + n * h, { strokeWidth: 2 });
+      R(x, y, w, n * h);
+      names.forEach((s, i) => T(x + head / 2, y + i * h + h / 2, s, { size: o.size || 18, anchor: 'middle' }));
+      return { y: names.map((_, i) => y + i * h + h / 2), x: x + head, r: x + w };
+    };
+    // 層。x, y: 左上、w: 幅、h: 1層の高さ、names: 上からの層、{ main: 主役の番号 } → 中身を置く場所 [{ x, y, w, h, cy }]
+    const layers = (x, y, w, h, names, o) => {
+      o = o || {}; const gap = o.gap == null ? 14 : o.gap, head = o.head || 190;
+      return names.map((s, i) => {
+        const yy = y + i * (h + gap), main = i === o.main;
+        RH(x, yy, w, h, solid(main ? C.navy : C.raised));
+        T(x + 24, yy + h / 2, s, { size: o.size || 19, fill: main ? C.onNavy : C.navy });
+        return { x: x + head, y: yy, w: w - head, h, cy: yy + h / 2 };
+      });
+    };
+    // ツリーの枝。親の下辺 [x, y] から、子の上辺 [[x, y], …] へ
+    const branch = (p, kids) => {
+      const my = (p[1] + kids[0][1]) / 2, xs = kids.map(k => k[0]).concat(p[0]), o = { strokeWidth: 2 };
+      L(p[0], p[1], p[0], my, o);
+      if (kids.length > 1 || kids[0][0] !== p[0]) L(Math.min(...xs), my, Math.max(...xs), my, o);
+      kids.forEach(k => L(k[0], my, k[0], k[1], o));
+    };
+    // 4象限。x, y, w, h: 枠、{ xl, yl: 軸の名前, hi: 注目する象限 'tl' 'tr' 'bl' 'br' } → pt(u, v): 0〜1 を座標に直す
+    const quadrant = (x, y, w, h, o) => {
+      o = o || {};
+      if (o.hi) {
+        const qx = o.hi[1] === 'l' ? x : x + w / 2, qy = o.hi[0] === 't' ? y : y + h / 2;
+        add(rc.rectangle(qx, qy, w / 2, h / 2, base({ stroke: 'none', fill: C.sky, fillStyle: 'hachure', hachureGap: 9, fillWeight: 1.5 })));
+      }
+      const mid = { stroke: C.grey, strokeWidth: 1.5, strokeLineDash: [7, 7], roughness: 0.5 };
+      L(x + w / 2, y, x + w / 2, y + h, mid); L(x, y + h / 2, x + w, y + h / 2, mid);
+      arrow([[x, y + h], [x + w + 14, y + h]]); arrow([[x, y + h], [x, y - 14]]);
+      if (o.xl) T(x + w + 14, y + h + 26, o.xl, { size: 18, anchor: 'end' });
+      if (o.yl) T(x - 16, y - 4, o.yl, { size: 18, anchor: 'end' });
+      return { pt: (u, v) => [x + u * w, y + (1 - v) * h] };
+    };
+    // 工程表。x, y: 左上、w: 全幅、cs: 時間の見出し、rows: 作業 → { bar(行, 開始, 終了, { main }), mark(行, 位置), x(位置), bottom }
+    const gantt = (x, y, w, cs, rows, o) => {
+      o = o || {}; const head = o.head || 150, rh = o.rowH || 60, hh = 40, cw = (w - head) / cs.length, y0 = y + hh;
+      const X = t => x + head + cw * t;
+      cs.forEach((s, i) => {
+        T(X(i + 0.5), y + hh / 2 - 2, s, { size: 17, anchor: 'middle' });
+        if (i) L(X(i), y0, X(i), y0 + rh * rows.length, { stroke: C.grey, strokeWidth: 1.2, strokeLineDash: [4, 7], roughness: 0.5 });
+      });
+      L(x, y0, x + w, y0);
+      rows.forEach((s, i) => T(x + head - 20, y0 + rh * (i + 0.5), s, { size: 18, anchor: 'end' }));
+      const bar = (i, a, b, oo) => RH(X(a), y0 + rh * i + 13, X(b) - X(a), rh - 26, (oo && oo.main) ? hach(C.navy, 3.5) : hach(C.sky, 5));
+      const mark = (i, t) => { const cx = X(t), cy = y0 + rh * (i + 0.5), r = 15; PG([[cx, cy - r], [cx + r, cy], [cx, cy + r], [cx - r, cy]], solid(C.navy)); };
+      return { bar, mark, x: X, bottom: y0 + rh * rows.length };
+    };
+    // 時間の軸。x1〜x2 に矢印を引き、labels を目盛りに置く → 目盛りの x
+    const axis = (x1, x2, y, labels) => {
+      arrow([[x1, y], [x2, y]]);
+      const xs = cols(x1 + 60, x2 - 90, labels.length);
+      xs.forEach((x, i) => { L(x, y - 10, x, y + 10); T(x, y + 32, labels[i], { size: 19, anchor: 'middle' }); });
+      return xs;
+    };
+    // 循環。cx, cy: 中心、rx, ry: 半径、n: 段の数 → 段の中心 [[x, y], …]（上から時計回り）。段の間に回る矢印を描く
+    const ring = (cx, cy, rx, ry, n, o) => {
+      o = o || {}; const pad = o.pad || 0.42, at = a => [cx + rx * Math.cos(a), cy + ry * Math.sin(a)], ang = i => -Math.PI / 2 + (2 * Math.PI * i) / n;
+      for (let i = 0; i < n; i++) {
+        const a = ang(i) + pad, b = ang(i + 1) - pad;
+        arrow([0, 0.25, 0.5, 0.75, 1].map(t => at(a + (b - a) * t)), { head: 13 });
+      }
+      return Array.from({ length: n }, (_, i) => at(ang(i)));
+    };
+    // ピラミッド。x: 中心、b: 底、w: 底辺、h: 高さ、n: 段数、{ main: 主役の番号 } → 上からの段 [{ x, y, w }]（y は段の中心、w はそこでの幅）
+    const pyramid = (x, b, w, h, n, o) => {
+      o = o || {}; const gap = 8, lh = h / n, top = b - h, half = yy => (w / 2) * ((yy - top) / h);
+      return Array.from({ length: n }, (_, i) => {
+        const y1 = top + i * lh + (i ? gap : 0), y2 = top + (i + 1) * lh;
+        const p = [[x - half(y1), y1], [x + half(y1), y1], [x + half(y2), y2], [x - half(y2), y2]];
+        add(rc.polygon(p, under())); PG(p, i === o.main ? hach(C.navy, 4) : solid(C.raised));
+        return { x, y: (y1 + y2) / 2, w: half((y1 + y2) / 2) * 2 };
+      });
+    };
+
     return {
-      C, tw, base, hach, solid, L, R, O, P, PL, PG, RH, T, heading, sign, arrow, ground,
-      person, robot, crate, conveyor, queue, stack, desk, monitor, gate, board, doc, clipboard, lock, magnifier, lamp, bars,
-      box, cylinder,
+      C, tw, base, hach, solid, L, R, O, P, PL, PG, RH, T, heading, sign, arrow, elbow, ground,
+      person, robot, crate, conveyor, queue, stack, desk, monitor, gate, board, doc, clipboard, lock, magnifier, lamp, bars, phone, safe,
+      box, cylinder, state, dot, diamond,
+      cols, sequence, lanes, layers, branch, quadrant, gantt, axis, ring, pyramid,
     };
   }
   g.Zukai = { create, THEME, FONT };

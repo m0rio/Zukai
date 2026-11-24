@@ -1,12 +1,12 @@
 {
   "name": "zukai",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
-  "description": "Zukai: 図解を主、文章を従にするスキルと、手描き風の部品集（Morio Navy）",
+  "description": "Zukai: 図解を主、文章を従にするスキルと、手描き風の部品・型の骨組み（Morio Navy）",
   "type": "module",
   "scripts": {
     "render": "node scripts/render.mjs",
-    "examples": "node scripts/render.mjs examples/before-after.html examples/before-after.png && node scripts/render.mjs examples/parts.html examples/parts.png && node scripts/render.mjs examples/structure.html examples/structure.png"
+    "examples": "for f in examples/*.html; do node scripts/render.mjs \"$f\" \"${f%.html}.png\" || exit 1; done"
   },
   "dependencies": {
     "@fontsource/yusei-magic": "5.3.0",

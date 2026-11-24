@@ -6,7 +6,7 @@
 <style>html,body{margin:0;background:#eeeeee}svg{display:block}</style>
 </head>
 <body>
-<!-- 単体画像は 1200×630、スライドは 1920×1080。aria-label に「何がどうなっている絵か」を1文で書く -->
+<!-- 単体画像は 1200×630 前後、スライドは 1920×1080。aria-label に「何がどうなっている図か」を1文で書く -->
 <svg id="s" xmlns="http://www.w3.org/2000/svg" width="1200" height="630" role="img" aria-label=""></svg>
 <script src="https://cdn.jsdelivr.net/npm/roughjs@4.6.6/bundled/rough.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/m0rio/Zukai@main/zukai.js"></script>
@@ -14,13 +14,12 @@
 const z = Zukai.create(document.getElementById('s'), { width: 1200, height: 630 }), C = z.C;
 const G = 480; // 足元の線。人と物は同じ線に立たせる
 
-// 1. 見出し（マーカー）
-z.heading(62, 76, '見出し');
-// 2. 地面・台 → 3. 小道具 → 4. 人 → 5. 持ち物・記号 → 6. 文字 の順に描く
+// 見出しに結論を書く
+z.heading(62, 76, '結論を1文で書く');
+// 地面 → 小道具 → 人 → 持ち物 → 文字 の順に描く
 z.ground(80, 1120, G);
 z.person(200, G);
-// 7. 下に結論を1文
-z.T(600, 592, '結論を1文で書く', { size: 21, anchor: 'middle' });
+z.T(200, G + 28, '名前', { size: 17, anchor: 'middle' });
 </script>
 </body>
 </html>

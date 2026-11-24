@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yusei+Magic&display=swap">
+<style>html,body{margin:0;background:#eeeeee}svg{display:block}</style>
+</head>
+<body>
+<svg id="s" xmlns="http://www.w3.org/2000/svg" width="1200" height="480" role="img"
+  aria-label="保留をめぐるコンセプトマップ。限度額は超えると保留を起こし、不正検知は疑うと保留を起こす。保留を解くのは担当者。"></svg>
+<script src="https://cdn.jsdelivr.net/npm/roughjs@4.6.6/bundled/rough.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/m0rio/Zukai@main/zukai.js"></script>
+<script>
+const z = Zukai.create(document.getElementById('s'), { width: 1200, height: 480 }), C = z.C;
+z.heading(60, 56, '保留を起こすものは2つ、解けるのは1人');
+const t = { size: 17, anchor: 'middle' };
+
+// 関係：矢印に動詞を付ける
+z.arrow([[326, 205], [504, 282]]);  z.T(440, 202, '超えると起こす', t);
+z.arrow([[326, 400], [504, 324]]);  z.T(452, 398, '疑うと起こす', t);
+z.arrow([[932, 302], [698, 302]]);  z.T(815, 282, '解く', t);
+
+// 概念
+z.box(140, 160, 180, 64, '限度額');
+z.box(140, 380, 180, 64, '不正検知');
+z.box(510, 268, 180, 68, '保留', { role: 'main' });
+z.person(984, 344); z.T(984, 370, '担当者', { anchor: 'middle' });
+</script>
+</body>
+</html>
