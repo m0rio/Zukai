@@ -2,7 +2,7 @@
   "name": "zukai",
   "version": "0.2.0",
   "private": true,
-  "description": "Zukai: 図解を主、文章を従にするスキルと、手描き風の部品・型の骨組み（Morio Navy）",
+  "description": "Zukai: 図解を主、文章を従にするスキルと、手描き風の部品・型の骨組み",
   "type": "module",
   "scripts": {
     "render": "node scripts/render.mjs",

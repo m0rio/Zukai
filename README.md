@@ -1,6 +1,6 @@
 # Zukai
 
-図解を主、文章を従にするためのスキルと、手描き風の図の部品・型の骨組み（Morio Navy）。
+図解を主、文章を従にするためのスキルと、手描き風の図の部品・型の骨組み。
 
 ![情景図の見本](examples/scene.png)
 
@@ -78,7 +78,7 @@ node scripts/render.mjs examples/sequence.html out.png
 | 差し色（斜線） | 水色 `#8fb4ec` |
 | 見出しのマーカー | 薄い黄色 `#f6e7a0` |
 
-書体は Yusei Magic。値の正本は [`SKILL.md`](SKILL.md) 4章と `zukai.js`。Design System「Morio Navy」はその写しで、`zukai.js` と `examples/*.js` をそのまま写して見本を表示する。
+書体は Yusei Magic。値の正本は [`SKILL.md`](SKILL.md) 4章と `zukai.js`。
 
 ## 部品や型を足す・直すとき
 

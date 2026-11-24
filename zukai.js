@@ -1,4 +1,4 @@
-/*! Zukai parts — rough.js の上に載せる手描き風の部品集（Morio Navy）
+/*! Zukai parts — rough.js の上に載せる手描き風の部品集
  *  使い方: const z = Zukai.create(svg, { width: 1200, height: 630 }); z.person(150, 480);
  *  先に rough.js（4.6.6）を読み込んでおく。色と線の値は SKILL.md 4章と同じ。 */
 (function (g) {
