@@ -10,7 +10,7 @@
 |---|---|
 | [`SKILL.md`](SKILL.md) | スキルの本体。原則・型の選び方・色と書体の値 |
 | [`zukai.js`](zukai.js) | rough.js の上に載せた部品（人・小道具・箱）と、型の骨組み |
-| [`examples/`](examples) | 型ごとの見本。見本が仕様 |
+| [`examples/`](examples) | 型ごとの見本。見本が仕様。絵のコードは `.js`、`.html` はそれを読み込む枠 |
 | [`templates/scene.html`](templates/scene.html) | 図のひな形 |
 | [`scripts/render.mjs`](scripts/render.mjs) | HTML の図を PNG に書き出す |
 
@@ -34,6 +34,8 @@
 ## 部品
 
 ![部品の一覧](examples/parts.png)
+
+![記号と物のアイコン](examples/icons.png)
 
 ## 使い方
 
@@ -76,7 +78,7 @@ node scripts/render.mjs examples/sequence.html out.png
 | 差し色（斜線） | 水色 `#8fb4ec` |
 | 見出しのマーカー | 薄い黄色 `#f6e7a0` |
 
-書体は Yusei Magic。
+書体は Yusei Magic。値の正本は [`SKILL.md`](SKILL.md) 4章と `zukai.js`。Design System「Morio Navy」はその写しで、見本はこのリポジトリの `examples/*.js` を読み込んで表示する。
 
 ## 部品や型を足す・直すとき
 

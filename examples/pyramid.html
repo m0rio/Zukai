@@ -6,24 +6,9 @@
 <style>html,body{margin:0;background:#eeeeee}svg{display:block}</style>
 </head>
 <body>
-<svg id="s" xmlns="http://www.w3.org/2000/svg" width="1200" height="600" role="img"
-  aria-label="振込の件数のピラミッド。すべての振込は10,000件、自動で保留されるのは120件、不正は3件。"></svg>
+<svg id="s" xmlns="http://www.w3.org/2000/svg" width="1200" height="600" role="img"></svg>
 <script src="https://cdn.jsdelivr.net/npm/roughjs@4.6.6/bundled/rough.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/m0rio/Zukai@main/zukai.js"></script>
-<script>
-const z = Zukai.create(document.getElementById('s'), { width: 1200, height: 600 }), C = z.C;
-z.heading(60, 56, '止まるのは約1%、不正はさらに少ない');
-
-// 骨組み：上から主役の段、下が土台
-const lv = z.pyramid(380, 550, 560, 420, 3, { main: 0 });
-
-// 段の名前と数は、右に列をそろえて置く
-[['不正', '3件'], ['自動で保留', '120件'], ['すべての振込', '10,000件']].forEach(([t, n], i) => {
-  const y = lv[i].y;
-  z.L(lv[i].x + lv[i].w / 2 + 16, y, 716, y, { stroke: C.grey, strokeWidth: 1.5, roughness: 0.6 });
-  z.T(736, y, t, { size: 20 });
-  z.T(1060, y, n, { size: 22, anchor: 'end' });
-});
-</script>
+<script src="pyramid.js"></script>
 </body>
 </html>

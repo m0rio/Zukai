@@ -1,0 +1,23 @@
+// architecture の見本。HTML 側に <svg id="s"> を置き、rough.js と zukai.js の後に読み込む。
+document.getElementById('s').setAttribute('aria-label', '振込の構成図。利用者がアプリを使い、アプリが銀行のシステムの振込APIを呼ぶ。振込APIは不正検知と勘定系につながり、外部の通知へ非同期で送る。');
+const z = Zukai.create(document.getElementById('s'), { width: 1200, height: 520 }), C = z.C;
+z.heading(60, 56, '振込APIが、検知と記帳をつなぐ');
+const Y = 264;
+
+// 範囲
+z.box(430, 110, 560, 370, '銀行のシステム', { role: 'scope' });
+
+// つながり（実線は同期、破線は非同期）
+z.arrow([[160, Y], [244, Y]]);
+z.arrow([[316, Y], [474, Y]]);
+z.elbow([[560, Y - 42], [560, 182], [754, 182]]);
+z.elbow([[560, Y + 42], [560, 375], [769, 375]]);
+z.arrow([[646, Y], [1024, Y]], { strokeLineDash: [9, 7] });
+
+// 役割ごとの形
+z.person(110, 300, { s: 0.9, side: true }); z.T(110, 326, '利用者', { anchor: 'middle' });
+z.phone(280, 304);                          z.T(280, 328, 'アプリ', { anchor: 'middle' });
+z.box(480, Y - 36, 160, 72, '振込API', { role: 'main' });
+z.box(760, 150, 170, 64, '不正検知');
+z.cylinder(775, 330, 140, 90, '勘定系');
+z.box(1030, Y - 36, 130, 72, '通知', { role: 'ext' });

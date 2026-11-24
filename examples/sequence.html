@@ -6,34 +6,9 @@
 <style>html,body{margin:0;background:#eeeeee}svg{display:block}</style>
 </head>
 <body>
-<svg id="s" xmlns="http://www.w3.org/2000/svg" width="1200" height="740" role="img"
-  aria-label="振込のシーケンス図。利用者がアプリで宛先と金額を入れ、振込APIが不正検知に照会し、問題なしの返事を受けてから勘定系で出金と入金を行う。"></svg>
+<svg id="s" xmlns="http://www.w3.org/2000/svg" width="1200" height="740" role="img"></svg>
 <script src="https://cdn.jsdelivr.net/npm/roughjs@4.6.6/bundled/rough.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/m0rio/Zukai@main/zukai.js"></script>
-<script>
-const z = Zukai.create(document.getElementById('s'), { width: 1200, height: 740 });
-z.heading(60, 56, 'お金が動くのは、不正検知の後だけ');
-
-// 骨組み：列と時間の線
-const x = z.cols(130, 1070, 5), H = 196;
-const s = z.sequence(x, [240, 240, H + 8, H + 8, H + 8], 700);
-
-// 登場するもの：中身に合う形を置く
-z.person(x[0], H, { s: 0.85, side: true }); z.T(x[0], H + 24, '利用者', { anchor: 'middle' });
-z.phone(x[1], H);                           z.T(x[1], H + 24, 'アプリ', { anchor: 'middle' });
-z.box(x[2] - 80, H - 64, 160, 64, '振込API');
-z.box(x[3] - 80, H - 64, 160, 64, '不正検知', { role: 'main' });
-z.cylinder(x[4] - 60, H - 84, 120, 84, '勘定系');
-
-// やり取り：上から下へ時間が進む
-s.msg(0, 1, 290, '宛先と金額');
-s.msg(1, 2, 340, '振込を依頼');
-s.msg(2, 3, 390, '照会');
-s.msg(3, 2, 440, '問題なし', { back: true });
-s.msg(2, 4, 505, '出金・入金', { main: true });
-s.msg(4, 2, 560, '完了', { back: true });
-s.msg(2, 1, 610, '受付番号', { back: true });
-s.msg(1, 0, 660, '完了を表示', { back: true });
-</script>
+<script src="sequence.js"></script>
 </body>
 </html>

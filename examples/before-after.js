@@ -1,0 +1,30 @@
+// before-after の見本。HTML 側に <svg id="s"> を置き、rough.js と zukai.js の後に読み込む。
+document.getElementById('s').setAttribute('aria-label', 'いままでは夜と休日に受付が閉まり、振込が止まって積み上がる。これからは明かりがついたまま、振込が自動チェックを通って勘定系へ流れ続ける。');
+const z = Zukai.create(document.getElementById('s'), { width: 1200, height: 580 }), C = z.C;
+// ── いままで ──
+z.heading(62, 76, 'いままで');
+const G1 = 430, grey = Object.assign(z.hach(C.grey, 5, { fillStyle: 'cross-hatch', fillWeight: 1 }), { stroke: C.grey });
+z.lamp(205, 180);
+z.ground(70, 560, G1);
+z.desk(100, 310, G1 - 58);
+z.sign(205, G1 - 58 - 20, '受付は9時から', { size: 17 });
+for (let r = 0; r < 5; r++) for (let i = 0; i < 5 - r; i++) z.crate(400 + r * 15 + i * 30, G1 - r * 23, grey);
+z.T(315, 540, '夜と休日は、止まって積もる', { size: 21, anchor: 'middle' });
+
+// ── 変化 ──
+z.heading(610, 290, '24時間化', { size: 20, anchor: 'middle' });
+z.arrow([[564, 334], [612, 324], [658, 338]], { strokeWidth: 4.5, head: 17 });
+
+// ── これから ──
+z.heading(692, 76, 'これから');
+const G2 = 410, ly = G2 + 48;
+z.lamp(880, 120, { on: true, floor: G2, spread: 190 });
+z.conveyor(690, 1040, G2); z.ground(1050, 1152, G2);
+z.gate(930, G2);
+[720, 850, 930, 992].forEach(x => z.crate(x, G2));
+z.robot(785, G2);
+z.safe(1101, G2, { s: 0.8 });
+z.T(785, ly, '自動処理', { size: 17, anchor: 'middle' });
+z.T(930, ly, '自動チェック', { size: 17, anchor: 'middle' });
+z.T(1101, ly, '勘定系', { size: 17, anchor: 'middle' });
+z.T(922, 540, '夜も休日も、止まらず流れる', { size: 21, anchor: 'middle' });

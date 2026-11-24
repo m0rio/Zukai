@@ -12,7 +12,7 @@ description: "図解を主、文章を従にして答えるためのスキル（
 | ファイル | 中身 |
 |---|---|
 | `zukai.js` | rough.js の上に載せた部品（人・小道具・箱）と、型の骨組み |
-| `examples/` | 型ごとの見本。**見本が仕様。** 描く前に、使う型の `.png` と `.html` を見る |
+| `examples/` | 型ごとの見本。**見本が仕様。** 描く前に、使う型の `.png` と `.js` を見る |
 
 ## 1. 原則
 
@@ -120,7 +120,7 @@ description: "図解を主、文章を従にして答えるためのスキル（
 
 ## 4. 絵柄（Morio Navy）
 
-**色は navy・白・grey・sky。** 足りないときだけ薄い黄色（marker）。金・赤などは足さない。値は `zukai.js` に入っているので、部品を使えばそろう。 正本は Design System「Morio Navy」で、読めない環境ではこの表の値を使う。
+**色は navy・白・grey・sky。** 足りないときだけ薄い黄色（marker）。金・赤などは足さない。値は `zukai.js` に入っているので、部品を使えばそろう。 この表と `zukai.js` が正本で、Design System「Morio Navy」はその写し。
 
 | トークン | Light | Dark | 用途 |
 |---|---|---|---|
@@ -134,7 +134,7 @@ description: "図解を主、文章を従にして答えるためのスキル（
 | navy-soft | #d6e2f2 | #1d2f4d | 淡い水色のベタ（画面・レンズ） |
 | sky | #8fb4ec | #5d8fd6（暫定） | 差し色の斜線 |
 | marker | #f6e7a0 | #5a5122（暫定） | 見出しのマーカー・明かり |
-| success / warning / danger | #1a7f37 / #9a6700 / #c42b1c | #56d364 / #e3b341 / #ff7b72 | 状態（語かアイコンを添える） |
+| success / warning / danger | #1a7f37 / #9a6700 / #c42b1c | #56d364 / #e3b341 / #ff7b72 | 状態（語を添える。図の中では `mark`） |
 
 | 要素 | 決まり |
 |---|---|
@@ -147,7 +147,8 @@ description: "図解を主、文章を従にして答えるためのスキル（
 | 地 | surface。影・グラデーション・角丸なし |
 
 - 手描きの図はライトの値で描く。ダークの sky と marker は暫定。
-- 表と本文は手描き風にしない。本文と表は Noto Sans JP 15px、数字・コードは等幅。角丸 4px、罫線 1px。絵文字・感嘆符は使わない。
+- 資料の表題・見出し・要点は Yusei Magic。見出しには marker を引き、要点は navy のベタ＋白文字。
+- 表・タグ・本文は手描き風にしない。Noto Sans JP 15px、数字・コードは等幅。角丸 4px、罫線 1px。絵文字・感嘆符は使わない。
 - 文字は 15px 以上。スライド（1920×1080）は 28px 以上、スマホで読むチャットは 20px 以上。
 - Yusei Magic が無い環境は Noto Sans JP で代用し、そう伝える。
 - 文章は自然な日本語で、結論を先に、短く。図と重なる説明は書かない。資料内は常体。
@@ -224,7 +225,7 @@ flowchart LR
 
 ## 6. `zukai.js`
 
-座標は px。`x` は断りがなければ中心、`b` は足元（底）の y。見た目は `examples/parts.png`。塗りは `z.hach(色, 間隔)`（斜線）と `z.solid(色)`、色は `z.C.navy` `z.C.sky` `z.C.grey` `z.C.raised` `z.C.marker`。
+座標は px。`x` は断りがなければ中心、`b` は足元（底）の y。見た目は `examples/parts.png` と `examples/icons.png`。塗りは `z.hach(色, 間隔)`（斜線）と `z.solid(色)`、色は `z.C.navy` `z.C.sky` `z.C.grey` `z.C.raised` `z.C.marker`。
 
 **骨組み**（型の決まりだけを描き、位置を返す。中身はその上に置く）
 
@@ -264,6 +265,8 @@ flowchart LR
 | `desk(x1, x2, y)` / `monitor(x, y, w, h, b)` / `board(x, y, w, h)` | 机 / モニタ / 設計ボード |
 | `doc(x, y, w, h)` / `clipboard(x, y, w, h)` / `lock(x, b)` / `magnifier(x, y)` | 書類 / チェックリスト / 鍵 / 虫眼鏡 |
 | `lamp(x, y, { on, floor, spread })` / `bars(x, b, [高さ…], { main, labels })` / `ground(x1, x2, y)` | 照明 / 棒グラフ / 地面 |
+| `cloud` `bank` `coin` `mail` `calendar` `key` `shield` `bug` `flag` `bulb` `(x, b, { s })` | 雲 / 銀行 / 硬貨 / 封筒 / カレンダー / かぎ / 盾 / 虫 / 旗 / 電球 |
+| `mark(x, y, 種類, { s })` | 状態の記号。`check` `cross` `alert` `clock` `info` `question`。`x, y` は中心 |
 
 部品に無い形は、基本の線で4章の値のまま描く。くり返し使う形は `zukai.js` に足す。
 

@@ -1,6 +1,6 @@
 /*! Zukai parts — rough.js の上に載せる手描き風の部品集（Morio Navy）
  *  使い方: const z = Zukai.create(svg, { width: 1200, height: 630 }); z.person(150, 480);
- *  先に rough.js（4.6.6）を読み込んでおく。色と線の値は SKILL.md 5章と同じ。 */
+ *  先に rough.js（4.6.6）を読み込んでおく。色と線の値は SKILL.md 4章と同じ。 */
 (function (g) {
   const NS = 'http://www.w3.org/2000/svg';
   const THEME = {
@@ -243,6 +243,103 @@
       });
     };
 
+    // ── 記号と、物のアイコン ──
+    // 状態の記号。x, y: 中心、kind: check / cross / alert / clock / info / question、{ s: 倍率 }
+    const mark = (x, y, kind, o) => {
+      o = o || {}; const s = o.s || 1, w = { strokeWidth: 3.5 * Math.max(0.8, s), roughness: 0.6 };
+      const pt = (dx, dy) => O(x + dx * s, y + dy * s, 5 * s, { strokeWidth: 1, roughness: 0.4, fill: C.navy, fillStyle: 'solid' });
+      if (kind === 'alert') {
+        const tri = [[x, y - 23 * s], [x + 25 * s, y + 19 * s], [x - 25 * s, y + 19 * s]];
+        add(rc.polygon(tri, under())); PG(tri, { roughness: 0.9 });
+        L(x, y - 8 * s, x, y + 5 * s, w); pt(0, 12);
+        return;
+      }
+      add(rc.circle(x, y, 44 * s, under())); O(x, y, 44 * s, { roughness: 0.9 });
+      if (kind === 'check') PL([[x - 10 * s, y + 1 * s], [x - 3 * s, y + 9 * s], [x + 11 * s, y - 9 * s]], w);
+      else if (kind === 'cross') { L(x - 9 * s, y - 9 * s, x + 9 * s, y + 9 * s, w); L(x + 9 * s, y - 9 * s, x - 9 * s, y + 9 * s, w); }
+      else if (kind === 'clock') { L(x, y, x, y - 12 * s, w); L(x, y, x + 9 * s, y + 5 * s, w); }
+      else if (kind === 'info') { pt(0, -10); L(x, y - 2 * s, x, y + 11 * s, w); }
+      else if (kind === 'question') {
+        P(`M ${x - 7 * s} ${y - 6 * s} q 0 ${-8 * s} ${7 * s} ${-8 * s} q ${8 * s} 0 ${8 * s} ${7 * s} q 0 ${5 * s} ${-8 * s} ${9 * s} v ${3 * s}`, w);
+        pt(0, 12);
+      }
+    };
+    // 雲（外のサービス）。x: 中心、b: 底
+    const cloud = (x, b, o) => {
+      o = o || {}; const s = o.s || 1;
+      const d = `M ${x - 30 * s} ${b} h ${60 * s} a ${15 * s} ${15 * s} 0 0 0 ${2 * s} ${-30 * s} a ${20 * s} ${20 * s} 0 0 0 ${-36 * s} ${-10 * s} a ${14 * s} ${14 * s} 0 0 0 ${-24 * s} ${12 * s} a ${14 * s} ${14 * s} 0 0 0 ${-2 * s} ${28 * s} Z`;
+      add(rc.path(d, under())); P(d, { roughness: 0.8 });
+    };
+    // 銀行。x: 中心、b: 底
+    const bank = (x, b, o) => {
+      o = o || {}; const s = o.s || 1;
+      const roof = [[x - 40 * s, b - 48 * s], [x, b - 74 * s], [x + 40 * s, b - 48 * s]];
+      add(rc.polygon(roof, under())); PG(roof, { roughness: 0.8 });
+      for (const dx of [-24, 0, 24]) RH(x + (dx - 6) * s, b - 48 * s, 12 * s, 38 * s, Object.assign(hach(C.sky, 4), { strokeWidth: 2 }));
+      RH(x - 40 * s, b - 10 * s, 80 * s, 10 * s, solid(C.raised));
+    };
+    // 硬貨（お金）。x: 中心、b: 底
+    const coin = (x, b, o) => {
+      o = o || {}; const s = o.s || 1, y = b - 28 * s, w = { strokeWidth: 3, roughness: 0.6 };
+      add(rc.circle(x, y, 56 * s, under())); O(x, y, 56 * s, { roughness: 0.9 });
+      PL([[x - 10 * s, y - 15 * s], [x, y - 2 * s], [x + 10 * s, y - 15 * s]], w); L(x, y - 2 * s, x, y + 16 * s, w);
+      L(x - 9 * s, y + 1 * s, x + 9 * s, y + 1 * s, w); L(x - 9 * s, y + 8 * s, x + 9 * s, y + 8 * s, w);
+    };
+    // 封筒（メール・通知）。x: 中心、b: 底
+    const mail = (x, b, o) => {
+      o = o || {}; const s = o.s || 1;
+      RH(x - 36 * s, b - 50 * s, 72 * s, 50 * s, solid(C.raised));
+      PL([[x - 35 * s, b - 49 * s], [x, b - 22 * s], [x + 35 * s, b - 49 * s]], { strokeWidth: 2, roughness: 0.8 });
+    };
+    // カレンダー（日付・期限）。x: 中心、b: 底
+    const calendar = (x, b, o) => {
+      o = o || {}; const s = o.s || 1;
+      RH(x - 31 * s, b - 60 * s, 62 * s, 60 * s, solid(C.raised));
+      RH(x - 31 * s, b - 60 * s, 62 * s, 15 * s, Object.assign(solid(C.navy), { roughness: 0.8 }));
+      for (const dx of [-15, 15]) L(x + dx * s, b - 68 * s, x + dx * s, b - 55 * s, { strokeWidth: 3, roughness: 0.5 });
+      [[-17, -32], [0, -32], [17, -32], [-17, -15], [0, -15], [17, -15]].forEach(([dx, dy], i) =>
+        R(x + (dx - 5) * s, b + (dy - 5) * s, 10 * s, 10 * s, { strokeWidth: 1, roughness: 0.5, stroke: i === 4 ? C.navy : C.grey, fill: i === 4 ? C.sky : C.sunken, fillStyle: 'solid' }));
+    };
+    // かぎ（認証・権限）。x: 中心、b: 底
+    const key = (x, b, o) => {
+      o = o || {}; const s = o.s || 1, y = b - 18 * s, w = { strokeWidth: 3.5, roughness: 0.6 };
+      L(x - 8 * s, y, x + 36 * s, y, w); L(x + 22 * s, y, x + 22 * s, y + 11 * s, w); L(x + 34 * s, y, x + 34 * s, y + 14 * s, w);
+      add(rc.circle(x - 22 * s, y, 32 * s, under())); O(x - 22 * s, y, 32 * s, { strokeWidth: 3.5, roughness: 0.8 });
+    };
+    // 盾（守る）。x: 中心、b: 底
+    const shield = (x, b, o) => {
+      o = o || {}; const s = o.s || 1;
+      const d = `M ${x} ${b} C ${x - 22 * s} ${b - 10 * s}, ${x - 30 * s} ${b - 28 * s}, ${x - 30 * s} ${b - 58 * s} L ${x} ${b - 70 * s} L ${x + 30 * s} ${b - 58 * s} C ${x + 30 * s} ${b - 28 * s}, ${x + 22 * s} ${b - 10 * s}, ${x} ${b} Z`;
+      add(rc.path(d, under())); P(d, { roughness: 0.8 });
+      PL([[x - 12 * s, b - 37 * s], [x - 3 * s, b - 27 * s], [x + 13 * s, b - 48 * s]], { strokeWidth: 3.5, roughness: 0.6 });
+    };
+    // 虫（不具合）。x: 中心、b: 底
+    const bug = (x, b, o) => {
+      o = o || {}; const s = o.s || 1, y = b - 26 * s, w = { strokeWidth: 2, roughness: 0.7 };
+      for (const k of [-1, 1]) {
+        for (const dy of [-12, 0, 12]) L(x + k * 14 * s, y + dy * s, x + k * 32 * s, y + (dy * 1.7 - 2) * s, w);
+        L(x + k * 5 * s, b - 58 * s, x + k * 13 * s, b - 72 * s, w);
+      }
+      add(rc.ellipse(x, y, 38 * s, 48 * s, under())); add(rc.ellipse(x, y, 38 * s, 48 * s, base(hach(C.navy, 4, { hachureAngle: -50 }))));
+      add(rc.circle(x, b - 54 * s, 20 * s, under())); O(x, b - 54 * s, 20 * s, { roughness: 0.8 });
+    };
+    // 旗（目標・節目）。x: 竿の位置、b: 底
+    const flag = (x, b, o) => {
+      o = o || {}; const s = o.s || 1;
+      const f = [[x, b - 74 * s], [x + 48 * s, b - 60 * s], [x, b - 44 * s]];
+      add(rc.polygon(f, under())); PG(f, Object.assign(hach(C.sky, 4), { roughness: 0.8 }));
+      L(x, b, x, b - 76 * s, { strokeWidth: 3.5, roughness: 0.6 });
+    };
+    // 電球（気づき・案）。x: 中心、b: 底
+    const bulb = (x, b, o) => {
+      o = o || {}; const s = o.s || 1;
+      O(x, b - 46 * s, 46 * s, Object.assign(solid(C.marker), { roughness: 0.9 }));
+      RH(x - 10 * s, b - 24 * s, 20 * s, 16 * s, Object.assign(solid(C.raised), { strokeWidth: 2, roughness: 0.8 }));
+      L(x - 9 * s, b - 16 * s, x + 9 * s, b - 16 * s, { strokeWidth: 2, roughness: 0.6 });
+      L(x - 6 * s, b - 5 * s, x + 6 * s, b - 5 * s, { strokeWidth: 3, roughness: 0.5 });
+      PL([[x - 7 * s, b - 46 * s], [x - 3 * s, b - 38 * s], [x + 3 * s, b - 38 * s], [x + 7 * s, b - 46 * s]], { strokeWidth: 2, roughness: 0.6 });
+    };
+
     // ── 構造図の箱（役割で形と色を決める）──
     // role: main（主役）/ system（システム・処理）/ data（データ）/ ext（外部）/ scope（範囲）
     const box = (x, y, w, h, label, o) => {
@@ -409,6 +506,7 @@
     return {
       C, tw, base, hach, solid, L, R, O, P, PL, PG, RH, T, heading, sign, arrow, elbow, ground,
       person, robot, crate, conveyor, queue, stack, desk, monitor, gate, board, doc, clipboard, lock, magnifier, lamp, bars, phone, safe,
+      mark, cloud, bank, coin, mail, calendar, key, shield, bug, flag, bulb,
       box, cylinder, state, dot, diamond,
       cols, sequence, lanes, layers, branch, quadrant, gantt, axis, ring, pyramid,
     };
