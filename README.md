@@ -76,7 +76,7 @@ node scripts/render.mjs examples/sequence.html out.png
 | 地 / 白い面 | グレー `#eeeeee` / 白 `#ffffff` |
 | 脇役 | グレー `#7d7d7d` |
 | 差し色（斜線） | 水色 `#8fb4ec` |
-| 見出しのマーカー | 薄い黄色 `#f6e7a0` |
+| 明かり（電球など）だけ | 薄い黄色 `#f6e7a0` |
 
 書体は Yusei Magic。値の正本は [`SKILL.md`](SKILL.md) 4章と `zukai.js`。
 

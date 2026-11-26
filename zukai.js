@@ -11,7 +11,7 @@
     sky: '#8fb4ec',      // 水色（差し色の斜線）
     navySoft: '#d6e2f2', // 淡い水色（レンズなどのベタ）
     grey: '#7d7d7d',     // 脇役の線（line-strong）
-    marker: '#f6e7a0',   // 薄い黄色（見出しのマーカー・明かり）
+    marker: '#f6e7a0',   // 薄い黄色（明かりだけ。見出しには使わない）
     onNavy: '#ffffff',   // ネイビーの上の文字
   };
   const FONT = "'Yusei Magic','Noto Sans JP','Noto Sans CJK JP',sans-serif";
@@ -64,14 +64,10 @@
       t.textContent = s;
       return add(t);
     };
-    // マーカーを引いた見出し（見出しと要の1語だけに使う）
+    // 見出し（navy の文字だけ。マーカーは引かない）
     const heading = (x, y, s, o) => {
       o = o || {};
-      const size = o.size || 26, w = tw(s, size);
-      const x0 = o.anchor === 'middle' ? x - w / 2 : x;
-      const m = add(rc.line(x0 - 2, y + 3, x0 + w + 2, y + 3, base({ stroke: C.marker, strokeWidth: size * 0.72, roughness: 0.6, disableMultiStroke: true })));
-      m.querySelectorAll('path').forEach(p => p.setAttribute('stroke-linecap', 'round'));
-      return T(x, y, s, { size, anchor: o.anchor, fill: o.fill });
+      return T(x, y, s, { size: o.size || 26, anchor: o.anchor, fill: o.fill });
     };
     // 札（白い板に名前）。x, y は中心
     const sign = (x, y, s, o) => {
