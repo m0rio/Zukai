@@ -1,0 +1,25 @@
+{
+  "aws": {
+    "aws-lambda": "AWSLambda", "aws-ec2": "AmazonEC2", "aws-ecs": "AmazonElasticContainerService",
+    "aws-eks": "AmazonElasticKubernetesService", "aws-fargate": "AWSFargate", "aws-ecr": "AmazonElasticContainerRegistry",
+    "aws-s3": "AmazonSimpleStorageService", "aws-rds": "AmazonRDS", "aws-aurora": "AmazonAurora",
+    "aws-dynamodb": "AmazonDynamoDB", "aws-elasticache": "AmazonElastiCache", "aws-api-gateway": "AmazonAPIGateway",
+    "aws-cloudfront": "AmazonCloudFront", "aws-route53": "AmazonRoute53", "aws-vpc": "AmazonVirtualPrivateCloud",
+    "aws-elb": "ElasticLoadBalancing", "aws-sqs": "AmazonSimpleQueueService", "aws-sns": "AmazonSimpleNotificationService",
+    "aws-eventbridge": "AmazonEventBridge", "aws-step-functions": "AWSStepFunctions", "aws-kinesis": "AmazonKinesis",
+    "aws-cognito": "AmazonCognito", "aws-iam": "AWSIdentityandAccessManagement", "aws-cloudwatch": "AmazonCloudWatch",
+    "aws-bedrock": "AmazonBedrock", "aws-cloudformation": "AWSCloudFormation", "aws-secrets-manager": "AWSSecretsManager",
+    "aws-waf": "AWSWAF"
+  },
+  "logos": {
+    "aws": "aws",
+    "python": "python", "typescript": "typescript-icon", "javascript": "javascript", "go": "go", "rust": "rust",
+    "java": "java", "kotlin": "kotlin-icon", "swift": "swift", "ruby": "ruby", "php": "php",
+    "csharp": "c-sharp", "cpp": "c-plusplus",
+    "docker": "docker-icon", "kubernetes": "kubernetes", "git": "git-icon", "github": "github-icon",
+    "github-actions": "github-actions", "terraform": "terraform-icon", "linux": "linux-tux", "nginx": "nginx",
+    "postgresql": "postgresql", "mysql": "mysql-icon", "redis": "redis", "mongodb": "mongodb-icon",
+    "kafka": "kafka-icon", "react": "react", "nextjs": "nextjs-icon", "vue": "vue", "nodejs": "nodejs-icon",
+    "graphql": "graphql"
+  }
+}

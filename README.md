@@ -1,6 +1,6 @@
 # Zukai
 
-図解を主、文章を従にするためのスキルと、手描き風の図の部品・型の骨組み。
+図解を主、文章を従にするためのスキルと、手描き風の図の部品・型の骨組み。絵柄は、ホワイトボードに4色ボールペンで手書きした絵。
 
 ![情景図の見本](examples/scene.png)
 
@@ -10,6 +10,7 @@
 |---|---|
 | [`SKILL.md`](SKILL.md) | スキルの本体。原則・型の選び方・色と書体の値 |
 | [`zukai.js`](zukai.js) | rough.js の上に載せた部品（人・小道具・箱）と、型の骨組み |
+| [`zukai-icons.js`](zukai-icons.js) | 公式アイコン（AWS・言語・ツール）。[`icons.json`](icons.json) から [`scripts/build-icons.mjs`](scripts/build-icons.mjs) が作る |
 | [`examples/`](examples) | 型ごとの見本。見本が仕様。絵のコードは `.js`、`.html` はそれを読み込む枠 |
 | [`templates/scene.html`](templates/scene.html) | 図のひな形 |
 | [`scripts/render.mjs`](scripts/render.mjs) | HTML の図を PNG に書き出す |
@@ -21,7 +22,7 @@
 | 問い | 型 | 見本 |
 |---|---|---|
 | 何でできているか | 体系図 / ピラミッド / 層 | [nested](examples/nested.png) / [pyramid](examples/pyramid.png) / [layers](examples/layers.png) |
-| | ツリー / 構成図 | [tree](examples/tree.png) / [architecture](examples/architecture.png) |
+| | ツリー / 構成図 | [tree](examples/tree.png) / [architecture](examples/architecture.png) / [aws](examples/aws.png) |
 | どうつながるか | コンセプトマップ / 比較図 | [concept](examples/concept.png) / [compare](examples/compare.png) |
 | どう進むか | 流れ図 / スイムレーン / シーケンス図 | [flow](examples/flow.png) / [swimlane](examples/swimlane.png) / [sequence](examples/sequence.png) |
 | | 状態遷移図 / 循環図 | [state](examples/state.png) / [loop](examples/loop.png) |
@@ -36,6 +37,16 @@
 ![部品の一覧](examples/parts.png)
 
 ![記号と物のアイコン](examples/icons.png)
+
+## 公式アイコン
+
+AWS・言語・ツールは、公式の SVG を形も色も変えずに置く。`zukai-icons.js` を読み込み、`z.icon(x, y, 'aws-lambda', { label: 'Lambda' })`。
+
+![公式アイコンを使った構成図](examples/aws.png)
+
+![公式アイコンの一覧](examples/brand.png)
+
+足すときは `icons.json` に1行足して `npm run icons`。
 
 ## 使い方
 
@@ -70,13 +81,12 @@ node scripts/render.mjs examples/sequence.html out.png
 
 ## 色と書体
 
-| 役割 | 色 |
+| 種類 | 色 |
 |---|---|
-| 線・文字・主役 | ネイビー `#002b62` |
-| 地 / 白い面 | グレー `#eeeeee` / 白 `#ffffff` |
-| 脇役 | グレー `#7d7d7d` |
-| 差し色（斜線） | 水色 `#8fb4ec` |
-| 明かり（電球など）だけ | 薄い黄色 `#f6e7a0` |
+| 基本の形（箱・矢印・文字・人） | 白地 `#ffffff` に黒 `#1a1a1a`。脇役はグレー `#7d7d7d` |
+| 差し色 | 青 `#1d5fd1`＝注目 / 赤 `#d6332a`＝注意 / 緑 `#1a8f3c`＝OK |
+| 実物（スマホ・硬貨・電球など） | 黒の輪郭に、実物の色 |
+| 公式アイコン | 公式の色のまま |
 
 書体は Yusei Magic。値の正本は [`SKILL.md`](SKILL.md) 4章と `zukai.js`。
 
@@ -98,3 +108,6 @@ jsDelivr は `@main` の中身を最大12時間キャッシュする。push し�
 
 - [rough.js](https://github.com/rough-stuff/rough) 4.6.6（MIT）
 - [Yusei Magic](https://github.com/tanukifont/YuseiMagic)（SIL Open Font License）
+- [aws-icons](https://github.com/MKAbuMattar/aws-icons) 3.3.0（MIT。中身は AWS Architecture Icons）、[gilbarbara/logos](https://github.com/gilbarbara/logos)（CC0）。`zukai-icons.js` を作るときだけ使う
+
+ロゴと名称は各社の商標。図の中で、その製品・サービスを指すためだけに使う。

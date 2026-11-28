@@ -1,6 +1,6 @@
 // HTML の図を PNG に書き出す。
 //   node scripts/render.mjs <入力.html> <出力.png> [幅] [高さ]
-// CDN（rough.js・zukai.js・Yusei Magic）への読み込みは、このリポジトリと node_modules の
+// CDN（rough.js・zukai.js・zukai-icons.js・Yusei Magic）への読み込みは、このリポジトリと node_modules の
 // ローカルファイルに差し替える。ネットワークが無い環境でも、チャット用と同じ HTML をそのまま書き出せる。
 import puppeteer from 'puppeteer-core';
 import fs from 'node:fs';
@@ -22,6 +22,7 @@ const FAKE = 'https://zukai.local/fonts/';
 const local = url => {
   if (/cdn\.jsdelivr\.net\/npm\/roughjs/.test(url)) return { file: path.join(nm, 'roughjs/bundled/rough.js'), type: 'text/javascript' };
   if (/cdn\.jsdelivr\.net\/gh\/m0rio\/zukai[^/]*\/zukai\.js/i.test(url)) return { file: path.join(root, 'zukai.js'), type: 'text/javascript' };
+  if (/cdn\.jsdelivr\.net\/gh\/m0rio\/zukai[^/]*\/zukai-icons\.js/i.test(url)) return { file: path.join(root, 'zukai-icons.js'), type: 'text/javascript' };
   if (/fonts\.googleapis\.com\/css.*Yusei\+Magic/.test(url)) {
     const css = fs.readFileSync(path.join(fontDir, '400.css'), 'utf8').replace(/url\(\.\/files\//g, `url(${FAKE}`);
     return { body: css, type: 'text/css' };

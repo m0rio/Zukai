@@ -8,7 +8,7 @@ const q = z.quadrant(220, 130, 760, 430, { xl: '手間', yl: '効果', hi: 'tl' 
 
 // 中身：0〜1 の位置で置く
 const p = (u, v, t, o) => {
-  o = o || {}; const [x, y] = q.pt(u, v), c = o.main ? C.navy : C.grey;
+  o = o || {}; const [x, y] = q.pt(u, v), c = o.main ? C.ink : C.grey;
   z.O(x, y, o.main ? 20 : 15, { roughness: 0.6, stroke: c, fill: c, fillStyle: 'solid' });
   z.T(x + (o.left ? -18 : 18), y, t, { size: 18, anchor: o.left ? 'end' : 'start', halo: C.surface });
 };
