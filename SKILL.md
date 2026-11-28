@@ -12,6 +12,7 @@ description: "図解を主、文章を従にして答えるためのスキル（
 | ファイル | 中身 |
 |---|---|
 | `zukai.js` | rough.js の上に載せた部品（人・小道具・箱）と、型の骨組み |
+| `zukai-icons.js` | 公式アイコン（AWS・言語・ツール）。形も色も元のまま |
 | `examples/` | 型ごとの見本。**見本が仕様。** 描く前に、使う型の `.png` と `.js` を見る |
 
 ## 1. 原則
@@ -29,7 +30,7 @@ description: "図解を主、文章を従にして答えるためのスキル（
 | 型 | 1つ。2つ要るなら図を分ける |
 | 要素 | 9 |
 | 矢印 | 12 |
-| 主役（navy のベタ） | 1か所 |
+| 主役（黒のベタ） | 1か所 |
 
 超えたら、全体図1枚と詳細図に分ける。文章1段落や表で足りるなら、図にしない。
 
@@ -43,7 +44,7 @@ description: "図解を主、文章を従にして答えるためのスキル（
 | | 上位と下位・絞り込み | ピラミッド | `pyramid` | `pyramid` |
 | | 積み重なる層 | 層 | `layers` | `layers` |
 | | 親から子への分解 | ツリー | `branch` | `tree` |
-| | 登場人物とシステムのつながり | 構成図 | `box` `cylinder` `person` | `architecture` |
+| | 登場人物とシステムのつながり | 構成図 | `box` `cylinder` `person` `icon` | `architecture` `aws` |
 | どうつながるか | 2つの概念の関係 | 矢印＋動詞 | `arrow` | — |
 | | 3つ以上の概念の関係 | コンセプトマップ | `arrow` `box` | `concept` |
 | | 変化の前後・2案の違い | 比較図 | 同じ部品を左右に並べる | `compare` |
@@ -110,44 +111,69 @@ description: "図解を主、文章を従にして答えるためのスキル（
 
 | 役割 | 形 | `zukai.js` |
 |---|---|---|
-| 主役（1枚に1か所） | navy のベタ＋白文字 | `box(…, { role: 'main' })` |
+| 主役（1枚に1か所） | 黒のベタ＋白文字 | `box(…, { role: 'main' })` |
 | システム・処理 | 白い四角 | `box` |
 | データ・保存先 | grey の斜線の円柱 | `cylinder` |
 | 外部・範囲外 | grey の破線の四角 | `box(…, { role: 'ext' })` |
-| 範囲・まとまり | navy の枠だけ | `box(…, { role: 'scope' })` |
-| 人・利用者 | 胸像。脇役は grey | `person` |
+| 範囲・まとまり | 黒の枠だけ | `box(…, { role: 'scope' })` |
+| 人・利用者 | 胸像。色は塗らない。脇役は grey | `person` |
+| 実在の製品・サービス | 公式アイコン＋下に名前 | `icon` |
+| 注目 / 注意 / OK | 青 / 赤 / 緑の枠と斜線 | `box(…, { accent: 'blue' })` |
 | 状態 / 分岐 | だ円 / ひし形 | `state` / `diamond` |
 
 ## 4. 絵柄
 
-**色は navy・白・grey・sky。** 薄い黄色（marker）は明かりの絵だけ。金・赤などは足さない。値は `zukai.js` に入っているので、部品を使えばそろう。 この表と `zukai.js` が正本。
+**ホワイトボードに、4色ボールペンで手書きした絵にする。** 絵は3種類に分け、色の決まりを変える。
 
-| トークン | Light | Dark | 用途 |
+| 種類 | 例 | 形 | 色 |
 |---|---|---|---|
-| surface | #eeeeee | #1b1d22 | 地 |
-| surface-raised | #ffffff | #24272e | 白い面・箱・表 |
-| surface-sunken | #dbdbdb | #15171b | 入れ子の小箱 |
-| line | #c7c7c7 | #3a3e47 | 罫線 1px |
-| line-strong（grey） | #7d7d7d | #6b707b | 脇役の線・外部の破線・データの斜線 |
-| ink-strong / ink / ink-muted | #000000 / #3b3b3b / #616161 | #ffffff / #e6e6e6 / #a3a7b0 | 見出し / 本文 / 注記 |
-| navy | #002b62 | #3d6fb8 | 主役の塗り・線・図の中の文字 |
-| navy-soft | #d6e2f2 | #1d2f4d | 淡い水色のベタ（画面・レンズ） |
-| sky | #8fb4ec | #5d8fd6（暫定） | 差し色の斜線 |
-| marker | #f6e7a0 | #5a5122（暫定） | 明かり（電球・ランプ）だけ。見出しや文字の下には引かない |
-| success / warning / danger | #1a7f37 / #9a6700 / #c42b1c | #56d364 / #e3b341 / #ff7b72 | 状態（語を添える。図の中では `mark`） |
+| 基本の形 | 箱・矢印・文字・人・ロボット | 手描き（rough.js） | 白地に黒。差し色は青・赤・緑だけ |
+| 公式アイコン | AWS のサービス・言語・ツール | 公式の SVG のまま（`icon`） | 公式の色のまま |
+| 実物 | スマホ・硬貨・金庫・電球・旗 | 手描き。輪郭は黒 | 実物の色で塗る |
+
+色が付いているのは「意味のある差し色」か「実在のもの」だけ。飾りの色は足さない。
+
+**差し色の意味は固定する。** 資料をまたいで変えない。
+
+| 色 | 意味 | 使う所 |
+|---|---|---|
+| 黒のベタ＋白文字 | 主役 | 1枚に1か所 |
+| 青 | 注目（新しい側・自動の部分・注目する範囲） | 1枚の中で意味を1つに決める |
+| 赤 | 注意（問題・NG・危険・止まる所） | 問題のある所だけ |
+| 緑 | OK（成功・完了・通った所） | 結果を示す所だけ |
+| grey | 脇役・外部・データ | — |
+
+値は `zukai.js` に入っているので、部品を使えばそろう。この表と `zukai.js` が正本。
+
+| トークン | 値 | 用途 |
+|---|---|---|
+| surface / surface-raised | #ffffff | 地（ホワイトボード）・白い面 |
+| surface-sunken | #ececec | 入れ子の小箱 |
+| line | #c7c7c7 | 表の罫線 1px |
+| ink | #1a1a1a | 線・文字・主役の塗り |
+| grey | #7d7d7d | 脇役の線・外部の破線・データの斜線・注記 |
+| blue / red / green | #1d5fd1 / #d6332a / #1a8f3c | 注目 / 注意 / OK |
+| gold / light / glass / water | #f2c230 / #ffe36e / #cfe6f7 / #6fb6ea | 実物：硬貨・かぎ / 明かり / 画面・レンズ / 汗 |
+| steel / steelDark / body | #aab3bc / #77828d / #2e2e2e | 実物：金属 / 濃い金属 / 黒い機器 |
+| cardboard / wood / stone / kraft | #d2a56b / #b9824f / #e3dccd / #f6e8c3 | 実物：段ボール / 木 / 石 / 封筒 |
 
 | 要素 | 決まり |
 |---|---|
-| 線 | navy のゆらいだ線（roughness 1.2、太さ 2.5）。細部は 2、要の矢印は 4.5 |
-| 主役 | navy のベタ＋白文字。人と物は navy の密な斜線 |
-| 差し色 | sky の斜線。**1枚の中で意味を1つに固定する**（新しい側、自動の部分、注目する範囲など） |
+| 線 | 黒のゆらいだ線（roughness 1.2、太さ 2.5）。細部は 2、要の矢印は 4.5 |
+| 主役 | 黒のベタ＋白文字。人は黒の密な斜線 |
+| 差し色 | 青・赤・緑の線と斜線。上の表の意味でだけ使う |
 | 脇役・データ | grey の線と斜線 |
-| 強調 | navy のベタ＋白文字。見出しは文字だけで、マーカー・下線・帯を引かない |
-| 文字 | Yusei Magic、navy。太字指定をしない。斜線の上では白い縁取り（`halo`） |
-| 地 | surface。影・グラデーション・角丸なし |
+| 実物 | 黒の輪郭に、実物の色のベタ。陰影・光沢は付けない。新しい実物の色は `zukai.js` の THEME に足す |
+| 人・ロボット | 色を塗らない。主役は黒の斜線、脇役は grey |
+| 公式アイコン | `icon` で置く。なぞらない・色を変えない・傾けない。下に名前を添える。一覧に無いものは白い箱に名前を書く |
+| 強調 | 黒のベタ＋白文字。見出しは文字だけで、マーカー・下線・帯を引かない |
+| 文字 | Yusei Magic、黒。太字指定をしない。斜線の上では白い縁取り（`halo`） |
+| 地 | 白。影・グラデーション・角丸なし |
 
-- 手描きの図はライトの値で描く。ダークの sky と marker は暫定。
-- 資料の表題・見出し・要点は Yusei Magic。見出しは navy の文字だけ（マーカーを引かない）、要点は navy のベタ＋白文字。
+- 手描きの図は、ダークモードでも白地のまま描く（ホワイトボードは白い）。
+- 赤い実物（旗・虫・カレンダー）は「注意」の赤と紛れる。注意を示したい図では、赤い実物を置かない。
+- 公式アイコンは、その製品・サービスを指すためだけに使う。ロゴと名称は各社の商標。
+- 資料の表題・見出し・要点は Yusei Magic。見出しは黒の文字だけ（マーカーを引かない）、要点は黒のベタ＋白文字。
 - 表・タグ・本文は手描き風にしない。Noto Sans JP 15px、数字・コードは等幅。角丸 4px、罫線 1px。絵文字・感嘆符は使わない。
 - 文字は 15px 以上。スライド（1920×1080）は 28px 以上、スマホで読むチャットは 20px 以上。
 - Yusei Magic が無い環境は Noto Sans JP で代用し、そう伝える。
@@ -174,10 +200,13 @@ description: "図解を主、文章を従にして答えるためのスキル（
 <svg id="s" xmlns="http://www.w3.org/2000/svg" width="1200" height="630" role="img" aria-label="何がどうなっている図かを1文で"></svg>
 <script src="https://cdn.jsdelivr.net/npm/roughjs@4.6.6/bundled/rough.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/m0rio/Zukai@main/zukai.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/m0rio/Zukai@main/zukai-icons.js"></script><!-- 公式アイコンを使う図だけ -->
 <script>
 const z = Zukai.create(document.getElementById('s'), { width: 1200, height: 630 }), C = z.C;
 </script>
 ```
+
+- ページの地も白（`background:#ffffff`）にする。
 
 - 大きさは、単体画像 1200×630 前後、スライド 1920×1080。外周 60 は空ける。
 - チャットの中では `svg` の `width` を `100%` にして `height` を外す。スマホでは幅 600〜720 の縦長に組む。
@@ -195,13 +224,15 @@ CDN の読み込みはローカルのファイルに差し替わるので、ネ�
 **Mermaid**（冒頭に置き、役割ごとに class を付ける。handDrawn は flowchart で確認済み）
 
 ```
-%%{init: {'look':'handDrawn','handDrawnSeed':1,'theme':'base','themeVariables':{'fontFamily':'Yusei Magic, Noto Sans JP, sans-serif','primaryColor':'#ffffff','primaryBorderColor':'#002b62','primaryTextColor':'#002b62','lineColor':'#002b62','clusterBkg':'#eeeeee','clusterBorder':'#002b62','edgeLabelBackground':'#eeeeee'}}}%%
+%%{init: {'look':'handDrawn','handDrawnSeed':1,'theme':'base','themeVariables':{'fontFamily':'Yusei Magic, Noto Sans JP, sans-serif','primaryColor':'#ffffff','primaryBorderColor':'#1a1a1a','primaryTextColor':'#1a1a1a','lineColor':'#1a1a1a','clusterBkg':'#ffffff','clusterBorder':'#1a1a1a','edgeLabelBackground':'#ffffff'}}}%%
 flowchart LR
-  classDef main fill:#002b62,stroke:#002b62,color:#ffffff
-  classDef system fill:#ffffff,stroke:#002b62,stroke-width:2px,color:#002b62
-  classDef accent fill:#8fb4ec,stroke:#002b62,stroke-width:2px,color:#002b62
-  classDef data fill:#dbdbdb,stroke:#7d7d7d,color:#002b62
-  classDef ext fill:#eeeeee,stroke:#7d7d7d,stroke-dasharray:4 4,color:#002b62
+  classDef main fill:#1a1a1a,stroke:#1a1a1a,color:#ffffff
+  classDef system fill:#ffffff,stroke:#1a1a1a,stroke-width:2px,color:#1a1a1a
+  classDef focus fill:#ffffff,stroke:#1d5fd1,stroke-width:3px,color:#1a1a1a
+  classDef warn fill:#ffffff,stroke:#d6332a,stroke-width:3px,color:#1a1a1a
+  classDef ok fill:#ffffff,stroke:#1a8f3c,stroke-width:3px,color:#1a1a1a
+  classDef data fill:#ececec,stroke:#7d7d7d,color:#1a1a1a
+  classDef ext fill:#ffffff,stroke:#7d7d7d,stroke-dasharray:4 4,color:#1a1a1a
 ```
 
 同期は `-->`、非同期は `-.->`、範囲は `subgraph`、データは `[( )]`、人は `(( ))`。
@@ -209,14 +240,16 @@ flowchart LR
 **draw.io**（接続点は辺の中央、箱は 8px のグリッド）
 
 ```
-システム: rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#002b62;strokeWidth=2;fontColor=#002b62;
-主役:     rounded=0;whiteSpace=wrap;html=1;fillColor=#002b62;strokeColor=#002b62;fontColor=#ffffff;fillStyle=solid;
-差し色:   rounded=0;whiteSpace=wrap;html=1;fillColor=#8fb4ec;strokeColor=#002b62;strokeWidth=2;fontColor=#002b62;fillStyle=hachure;
-人:       ellipse;aspect=fixed;fillColor=#002b62;strokeColor=#002b62;fontColor=#ffffff;fillStyle=hachure;
-データ:   shape=cylinder3;boundedLbl=1;size=10;fillColor=#7d7d7d;strokeColor=#7d7d7d;fontColor=#002b62;fillStyle=hachure;
-外部:     rounded=0;dashed=1;fillColor=none;strokeColor=#7d7d7d;fontColor=#002b62;
-範囲:     rounded=0;fillColor=none;strokeColor=#002b62;strokeWidth=2;verticalAlign=top;align=left;spacingLeft=12;fontColor=#002b62;
-同期:     edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#002b62;strokeWidth=2;endArrow=open;
+システム: rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#1a1a1a;strokeWidth=2;fontColor=#1a1a1a;
+主役:     rounded=0;whiteSpace=wrap;html=1;fillColor=#1a1a1a;strokeColor=#1a1a1a;fontColor=#ffffff;fillStyle=solid;
+注目:     rounded=0;whiteSpace=wrap;html=1;fillColor=#1d5fd1;strokeColor=#1d5fd1;strokeWidth=2;fontColor=#1a1a1a;fillStyle=hachure;
+注意:     注目の2つの色を #d6332a に
+OK:       注目の2つの色を #1a8f3c に
+人:       ellipse;aspect=fixed;fillColor=#1a1a1a;strokeColor=#1a1a1a;fontColor=#ffffff;fillStyle=hachure;
+データ:   shape=cylinder3;boundedLbl=1;size=10;fillColor=#7d7d7d;strokeColor=#7d7d7d;fontColor=#1a1a1a;fillStyle=hachure;
+外部:     rounded=0;dashed=1;fillColor=none;strokeColor=#7d7d7d;fontColor=#1a1a1a;
+範囲:     rounded=0;fillColor=none;strokeColor=#1a1a1a;strokeWidth=2;verticalAlign=top;align=left;spacingLeft=12;fontColor=#1a1a1a;
+同期:     edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#1a1a1a;strokeWidth=2;endArrow=open;
 非同期:   同期 + dashed=1;
 共通（すべての末尾に足す）: sketch=1;curveFitting=1;jiggle=2;fontFamily=Yusei Magic;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DYusei%2BMagic;
 ```
@@ -225,7 +258,7 @@ flowchart LR
 
 ## 6. `zukai.js`
 
-座標は px。`x` は断りがなければ中心、`b` は足元（底）の y。見た目は `examples/parts.png` と `examples/icons.png`。塗りは `z.hach(色, 間隔)`（斜線）と `z.solid(色)`、色は `z.C.navy` `z.C.sky` `z.C.grey` `z.C.raised` `z.C.marker`。
+座標は px。`x` は断りがなければ中心、`b` は足元（底）の y。見た目は `examples/parts.png` `examples/icons.png` `examples/brand.png`。塗りは `z.hach(色, 間隔)`（斜線）と `z.solid(色)`、色は `z.C.ink` `z.C.grey` `z.C.blue` `z.C.red` `z.C.green` と、実物の色（`z.C.gold` など。4章）。
 
 **骨組み**（型の決まりだけを描き、位置を返す。中身はその上に置く）
 
@@ -246,7 +279,7 @@ flowchart LR
 
 | 関数 | 描くもの |
 |---|---|
-| `box(x, y, w, h, 文字, { role, sub })` / `cylinder(x, y, w, h, 文字)` | 箱と円柱。`x, y` は左上 |
+| `box(x, y, w, h, 文字, { role, sub, accent })` / `cylinder(x, y, w, h, 文字)` | 箱と円柱。`x, y` は左上。`accent` は `'blue'` `'red'` `'green'` |
 | `state(x, y, 文字, { w, role })` / `dot(x, y)` / `diamond(x, y, w, h, 文字)` | 状態・始まりの点・分岐 |
 | `arrow([[x, y], …], { strokeWidth, head, strokeLineDash })` | 矢印。2点で直線、3点以上で曲線 |
 | `elbow([[x, y], …])` | 折れ線の矢印 |
@@ -266,9 +299,10 @@ flowchart LR
 | `doc(x, y, w, h)` / `clipboard(x, y, w, h)` / `lock(x, b)` / `magnifier(x, y)` | 書類 / チェックリスト / 鍵 / 虫眼鏡 |
 | `lamp(x, y, { on, floor, spread })` / `bars(x, b, [高さ…], { main, labels })` / `ground(x1, x2, y)` | 照明 / 棒グラフ / 地面 |
 | `cloud` `bank` `coin` `mail` `calendar` `key` `shield` `bug` `flag` `bulb` `(x, b, { s })` | 雲 / 銀行 / 硬貨 / 封筒 / カレンダー / かぎ / 盾 / 虫 / 旗 / 電球 |
-| `mark(x, y, 種類, { s })` | 状態の記号。`check` `cross` `alert` `clock` `info` `question`。`x, y` は中心 |
+| `mark(x, y, 種類, { s })` | 状態の記号。`check`（緑）`cross` `alert`（赤）`info`（青）`clock` `question`（黒）。`x, y` は中心 |
+| `icon(x, y, 名前, { size, label })` | 公式アイコン。`x, y` は中心。名前は `aws-lambda` `aws-s3` `python` `docker` など（一覧は `examples/brand.png` と `icons.json`）。`zukai-icons.js` を読み込んでおく |
 
-部品に無い形は、基本の線で4章の値のまま描く。くり返し使う形は `zukai.js` に足す。
+部品に無い形は、基本の線で4章の値のまま描く。実物なら、黒の輪郭に実物の色を塗る。くり返し使う形は `zukai.js` に足す。
 
 **情景図**（「誰が・何をして・どうなるか」を場面で見せる）
 
@@ -290,7 +324,7 @@ flowchart LR
 - 人と物は、場面ごとの足元の線にそろえる。頭と手元を小道具で隠さない。
 - 人は顔を描かない。気持ちは汗・チェックなどの記号と、物の量で表す。吹き出しは使わない。
 - 文字は、見出し・部品の名前（部品の下に中央ぞろえ）・数字・下の結論1文まで。見出しが結論なら下の1文は省く。
-- 比較は左に前、右に後。右にだけ sky を使い、色でも違いを見せる。
+- 比較は左に前、右に後。右にだけ青を使い、色でも違いを見せる。
 
 ## 7. 確認
 
@@ -309,7 +343,8 @@ flowchart LR
 - 見出しが結論になっていて、図だけで1文で言えるか
 - 問いと型、目的と絵が合っているか。上限（1章）に収まっているか
 - すべての矢印の理由を説明でき、接続先が正しいか。元の資料・事実と食い違っていないか
-- 主役が1か所で、sky の意味が1つに決まっているか
+- 主役が1か所で、青の意味が1つに決まっているか。赤は注意、緑は OK にだけ使っているか
+- 色が付いているのは、差し色・実物・公式アイコンだけか
 
 **見た目**
 

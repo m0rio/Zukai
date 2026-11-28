@@ -1,6 +1,6 @@
 // parts の見本。HTML 側に <svg id="s"> を置き、rough.js と zukai.js の後に読み込む。
 document.getElementById('s').setAttribute('aria-label', 'Zukai の部品の見本。人、ロボット、箱、スマホ、金庫、作業キュー、書類の山、机とモニタ、検査ゲート、設計ボード、書類、チェックリスト、鍵、虫眼鏡、照明、棒グラフ、見出し、札、矢印、構造図の箱、円柱、状態、分岐、コンベア。');
-const z = Zukai.create(document.getElementById('s'), { width: 1200, height: 1340 }), C = z.C;
+const z = Zukai.create(document.getElementById('s'), { width: 1200, height: 1510 }), C = z.C;
 const cx = [110, 306, 502, 698, 894, 1090];
 const name = (x, y, s) => z.T(x, y, s, { size: 15, anchor: 'middle', fill: C.grey });
 const row = (b, cs) => cs.forEach(i => z.ground(cx[i] - 70, cx[i] + 70, b));
@@ -50,3 +50,12 @@ b = 1270;
 z.dot(cx[0], b - 30); name(cx[0], b + 26, 'dot');
 z.conveyor(cx[1] - 60, cx[3] + 60, b - 20); z.crate(cx[1], b - 20); z.crate(cx[2] - 40, b - 20); z.robot(cx[2] + 60, b - 20, { s: 0.8 }); name(cx[2], b + 26, 'conveyor');
 z.box(cx[4] - 80, b - 96, 276, 96, 'まとまり', { role: 'scope' }); name(cx[4] + 58, b + 26, "box { role: 'scope' }");
+
+// 4色ボールペンの差し色（青＝注目、赤＝注意、緑＝OK）
+b = 1440;
+z.box(cx[0] - 62, b - 74, 124, 58, '注目', { accent: 'blue' }); name(cx[0], b + 26, "box { accent: 'blue' }");
+z.box(cx[1] - 62, b - 74, 124, 58, '注意', { accent: 'red' }); name(cx[1], b + 26, "box { accent: 'red' }");
+z.box(cx[2] - 62, b - 74, 124, 58, 'OK', { accent: 'green' }); name(cx[2], b + 26, "box { accent: 'green' }");
+z.arrow([[cx[3] - 60, b - 45], [cx[3] + 60, b - 45]], { stroke: C.blue }); name(cx[3], b + 26, 'arrow { stroke: C.blue }');
+z.arrow([[cx[4] - 60, b - 45], [cx[4] + 60, b - 45]], { stroke: C.red }); name(cx[4], b + 26, 'arrow { stroke: C.red }');
+z.arrow([[cx[5] - 60, b - 45], [cx[5] + 60, b - 45]], { stroke: C.green }); name(cx[5], b + 26, 'arrow { stroke: C.green }');

@@ -22,6 +22,6 @@ z.ground(410, 780, G2);
 z.arrow([[gx, ly + 24], [434, 408], [462, 452], [512, 474]], { head: 12 });
 z.person(670, G2, { s: 1.2 });
 z.magnifier(560, 480, { s: 2 });
-z.crate(560, 492, z.hach(C.navy, 4));
+z.crate(560, 492, z.hach(C.ink, 4));
 z.T(552, G2 + 28, '止まった1件', { size: 17, anchor: 'middle' });
 z.T(670, G2 + 28, '担当者', { size: 17, anchor: 'middle' });
